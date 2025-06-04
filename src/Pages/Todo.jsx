@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../Components/Navbar";
 import CountingCards from "../Components/CountingCards";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -6,7 +6,16 @@ import WorkIcon from "@mui/icons-material/Work";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import styled from "styled-components";
-import { Fab } from "@mui/material";
+import {
+  backdropClasses,
+  Fab,
+  Modal,
+  Box,
+  TextField,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 const Todo = ({ isMobile }) => {
@@ -24,6 +33,30 @@ const Todo = ({ isMobile }) => {
       grid-template-columns: repeat(2, 1fr);
     }
   `;
+
+  const [openModal, setOpenModal] = useState(false); //state setter function
+
+  const [selectedOption, setSelectedOption] = useState();
+
+  const boxStyle = {
+    height: "fit-content",
+    width: "350px",
+    backgroundColor: "#fff",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
+    borderRadius: "10px",
+    border: "none",
+  };
+
+  const buttonStyle = {
+    width: "48%",
+    padding: "10px 15px",
+    border: "1px solid black",
+    borderRadius: "5px",
+    backgroundColor: "transparent",
+  };
 
   return (
     <div>
@@ -91,11 +124,86 @@ const Todo = ({ isMobile }) => {
           backgroundColor: "black",
           color: "white",
         }}
+        onClick={() => setOpenModal(true)}
       >
         <AddIcon />
       </Fab>
+
+      {/* add todo modal  */}
+      <Modal open={openModal} onClose={() => {}}>
+        <Box style={boxStyle}>
+          {/* modal headding  */}
+          <h4 style={{ textAlign: "center", margin: "10px 0px" }}>
+            Add your Task
+          </h4>
+
+          {/* write your task  */}
+          <div
+            style={{
+              padding: "10px 20px ",
+            }}
+          >
+            <InputLabel>TODO</InputLabel>
+            <TextField
+              variant="outlined"
+              style={{
+                width: "100%",
+              }}
+            />
+          </div>
+
+          {/* select your type  */}
+          <div
+            style={{
+              padding: "10px 20px",
+            }}
+          >
+            <InputLabel>Select category</InputLabel>
+            <Select
+              style={{
+                width: "100%",
+              }}
+              value={selectedOption}
+              onChange={(e) => setSelectedOption(e.target.value)}
+            >
+              <MenuItem value="health">Health</MenuItem>
+              <MenuItem value="study">Study</MenuItem>
+              <MenuItem value="work">Work</MenuItem>
+              <MenuItem value="mental">Mental Health</MenuItem>
+            </Select>
+          </div>
+
+          {/* buttons and actions  */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              // width: "100%",
+              // gap: "10px",
+              padding: "10px",
+            }}
+          >
+            <button style={buttonStyle} onClick={() => setOpenModal(false)}>
+              Cancel
+            </button>
+            <button
+              style={{
+                ...buttonStyle,
+                backgroundColor: "#000",
+                color: "#fff",
+              }}
+            >
+              ADD
+            </button>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };
 
 export default Todo;
+
+// const handleOpen = () => setOpenModal(true);
+// const handleClose = () => setOpenModal(false);
