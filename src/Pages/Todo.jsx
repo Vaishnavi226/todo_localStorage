@@ -6,6 +6,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import styled from "styled-components";
+import MyTasks from "../Components/Task";
 import {
   backdropClasses,
   Fab,
@@ -17,6 +18,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { v4 as uuidV } from "uuid";
 
 const Todo = ({ isMobile }) => {
   // styled components ( the name says it create react components that have style) (tags)
@@ -35,7 +37,6 @@ const Todo = ({ isMobile }) => {
   `;
 
   const [openModal, setOpenModal] = useState(false); //state setter function
-
   const [selectedOption, setSelectedOption] = useState();
 
   const boxStyle = {
@@ -57,6 +58,38 @@ const Todo = ({ isMobile }) => {
     borderRadius: "5px",
     backgroundColor: "transparent",
   };
+
+  const task1 = {
+    id: uuidV(),
+    title: "To Do HomeWork",
+    category: "study",
+    isCompleted: false,
+    createdAt: new Date().toISOString,
+  };
+
+  // array to store tasks
+  const tasks = [task1];
+
+  localStorage.setItem("taskDB", JSON.stringify(tasks));
+
+  // update db in local storage
+
+  const task2 = {
+    id: uuidV(),
+    title: "To Do Yoga",
+    category: "mHealth",
+    isCompleted: false,
+    createdAt: new Date().toISOString,
+  };
+
+  // fetch task json from local storage
+  const DBTasks = localStorage.getItem("taskDB");
+
+  let finalDb = JSON.parse(DBTasks);
+
+  finalDb = [...finalDb, task2];
+
+  localStorage.setItem("taskDB", JSON.stringify(finalDb));
 
   return (
     <div>
@@ -114,7 +147,10 @@ const Todo = ({ isMobile }) => {
           borderRadius: "7px",
           margin: "10px",
         }}
-      ></div>
+      >
+        <MyTasks taskTitle="Homework" taskType="study" />
+        <MyTasks taskTitle="Yoga" taskType="mHealth" />
+      </div>
 
       <Fab
         style={{
@@ -207,3 +243,20 @@ export default Todo;
 
 // const handleOpen = () => setOpenModal(true);
 // const handleClose = () => setOpenModal(false);
+
+// [
+//   {
+//     _id: wxhueicbskc,
+//     taskDesc: "cbdiuckcd",
+//     taskType: "health",
+//     dateCreated: "timestamp",
+//     isCompleted: false,
+//   },
+//   {
+//     _id: wxhueicbskc,
+//     taskDesc: "cbdiuckcd",
+//     taskType: "health",
+//     dateCreated: "timestamp",
+//     isCompleted: false,
+//   },
+// ];

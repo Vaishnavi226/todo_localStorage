@@ -1,17 +1,17 @@
 import React from "react";
 
-const CountingCards = ({ cardColor, cardIcon, cardTitle, cardCount }) => {
+const CountingCards = (props) => {
   return (
     <div
       style={{
         height: "fit-content",
         width: "auto",
-        backgroundColor: `${cardColor}`,
+        backgroundColor: `${props.cardColor}`,
         borderRadius: "15px",
         padding: "20px",
       }}
     >
-      {cardIcon}
+      {props.cardIcon}
 
       <div
         style={{
@@ -22,8 +22,8 @@ const CountingCards = ({ cardColor, cardIcon, cardTitle, cardCount }) => {
           fontWeight: 600,
         }}
       >
-        <div>{cardCount}</div>
-        <div>{cardTitle}</div>
+        <div>{props.cardCount}</div>
+        <div>{props.cardTitle}</div>
       </div>
     </div>
   );
