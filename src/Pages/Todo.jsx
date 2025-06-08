@@ -22,6 +22,7 @@ import {
   addTaskObj,
   createTaskObj,
   fetchArr,
+  markTaskDone,
   updateTaskDB,
 } from "../localStorage DB";
 
@@ -143,13 +144,29 @@ const Todo = ({ isMobile }) => {
         }}
       >
         {/* js map function */}
-        {myTaskData.map((element) => {
-          return (
-            !element.isCompleted && (
-              <MyTasks taskTitle={element.title} taskType={element.category} />
-            )
-          );
-        })}
+        {myTaskData &&
+          myTaskData.map((element, index) => {
+            // this will run when task completed
+            const onDone = () => {
+              const completedTask = markTaskDone(element);
+
+              // update this updated obj to array
+              myTaskData[index] = completedTask;
+
+              // update array to local storage
+              updateTaskDB("taskDB", myTaskData);
+            };
+
+            return (
+              !element.isCompleted && (
+                <MyTasks
+                  taskTitle={element.title}
+                  taskType={element.category}
+                  onDoneFunc={onDone}
+                />
+              )
+            );
+          })}
       </div>
 
       <Fab

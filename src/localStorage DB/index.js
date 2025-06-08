@@ -21,11 +21,22 @@ export const fetchArr = (DBName) => {
 
 //add new Task to array
 export const addTaskObj = (arr, obj) => {
-  const updatedArr = [...arr, obj];
+  let updatedArr;
+  if (arr) {
+    updatedArr = [...arr, obj];
+  } else {
+    updatedArr = [obj];
+  }
   return updatedArr;
 };
 
 // create/update db with new array
 export const updateTaskDB = (DBName, arr) => {
   localStorage.setItem(DBName, JSON.stringify(arr));
+};
+
+// mark task as done
+export const markTaskDone = (obj) => {
+  obj.isCompleted = true;
+  return obj;
 };

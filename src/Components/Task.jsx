@@ -1,6 +1,6 @@
 import { Checkbox, Typography } from "@mui/material";
 
-const Task = ({ taskTitle, taskType }) => {
+const Task = ({ taskTitle, taskType, onDoneFunc }) => {
   const cardColors = {
     health: "#FF9E9E",
     study: "#E8F9FF",
@@ -22,7 +22,7 @@ const Task = ({ taskTitle, taskType }) => {
       }}
     >
       <Typography variant="h5">{taskTitle}</Typography>
-      <Checkbox />
+      <Checkbox onChange={onDoneFunc} />
     </div>
   );
 };
