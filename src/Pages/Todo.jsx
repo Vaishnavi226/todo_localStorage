@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import CountingCards from "../Components/CountingCards";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -18,7 +18,12 @@ import {
   MenuItem,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { v4 as uuidV } from "uuid";
+import {
+  addTaskObj,
+  createTaskObj,
+  fetchArr,
+  updateTaskDB,
+} from "../localStorage DB";
 
 const Todo = ({ isMobile }) => {
   // styled components ( the name says it create react components that have style) (tags)
@@ -37,7 +42,6 @@ const Todo = ({ isMobile }) => {
   `;
 
   const [openModal, setOpenModal] = useState(false); //state setter function
-  const [selectedOption, setSelectedOption] = useState();
 
   const boxStyle = {
     height: "fit-content",
@@ -59,37 +63,27 @@ const Todo = ({ isMobile }) => {
     backgroundColor: "transparent",
   };
 
-  const task1 = {
-    id: uuidV(),
-    title: "To Do HomeWork",
-    category: "study",
-    isCompleted: false,
-    createdAt: new Date().toISOString,
+  // take user inputs from user
+  const [userInputTask, setUserInputTask] = useState();
+  const [userInputType, setUserInputType] = useState();
+
+  const addDataToDB = () => {
+    // create new task object with user input
+    const taskObj = createTaskObj(userInputTask, userInputType);
+
+    //fetch existing json string into array
+    const dbArray = fetchArr("taskDB"); // when function is called by assigning to a var then return value is assigned to variabnle
+
+    // add task in the array and then in loacl storage
+    const newTask = addTaskObj(dbArray, taskObj);
+
+    //update
+    updateTaskDB("taskDB", newTask);
+
+    setOpenModal(false);
   };
 
-  // array to store tasks
-  const tasks = [task1];
-
-  localStorage.setItem("taskDB", JSON.stringify(tasks));
-
-  // update db in local storage
-
-  const task2 = {
-    id: uuidV(),
-    title: "To Do Yoga",
-    category: "mHealth",
-    isCompleted: false,
-    createdAt: new Date().toISOString,
-  };
-
-  // fetch task json from local storage
-  const DBTasks = localStorage.getItem("taskDB");
-
-  let finalDb = JSON.parse(DBTasks);
-
-  finalDb = [...finalDb, task2];
-
-  localStorage.setItem("taskDB", JSON.stringify(finalDb));
+  const myTaskData = fetchArr("taskDB");
 
   return (
     <div>
@@ -148,13 +142,19 @@ const Todo = ({ isMobile }) => {
           margin: "10px",
         }}
       >
-        <MyTasks taskTitle="Homework" taskType="study" />
-        <MyTasks taskTitle="Yoga" taskType="mHealth" />
+        {/* js map function */}
+        {myTaskData.map((element) => {
+          return (
+            !element.isCompleted && (
+              <MyTasks taskTitle={element.title} taskType={element.category} />
+            )
+          );
+        })}
       </div>
 
       <Fab
         style={{
-          position: "absolute",
+          position: "fixed",
           bottom: 20,
           right: 20,
           backgroundColor: "black",
@@ -185,6 +185,7 @@ const Todo = ({ isMobile }) => {
               style={{
                 width: "100%",
               }}
+              onChange={(e) => setUserInputTask(e.target.value)}
             />
           </div>
 
@@ -199,13 +200,13 @@ const Todo = ({ isMobile }) => {
               style={{
                 width: "100%",
               }}
-              value={selectedOption}
-              onChange={(e) => setSelectedOption(e.target.value)}
+              value={userInputType}
+              onChange={(e) => setUserInputType(e.target.value)}
             >
               <MenuItem value="health">Health</MenuItem>
               <MenuItem value="study">Study</MenuItem>
               <MenuItem value="work">Work</MenuItem>
-              <MenuItem value="mental">Mental Health</MenuItem>
+              <MenuItem value="mHealth">Mental Health</MenuItem>
             </Select>
           </div>
 
@@ -229,6 +230,7 @@ const Todo = ({ isMobile }) => {
                 backgroundColor: "#000",
                 color: "#fff",
               }}
+              onClick={addDataToDB}
             >
               ADD
             </button>
